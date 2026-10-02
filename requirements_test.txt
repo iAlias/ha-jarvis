@@ -4,6 +4,7 @@ pytest-homeassistant-custom-component==0.13.367
 
 # Requisiti dei componenti di HA caricati dai test (conversation, assist_pipeline,
 # tts, ffmpeg): nei test HA non li installa da solo.
+gazetteer-matcher==1.1.0
 hassil==3.12.1
 home-assistant-intents==2026.8.28
 pymicro-vad==1.0.1
