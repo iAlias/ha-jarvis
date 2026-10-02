@@ -68,10 +68,10 @@ test nel compito indicato.
 `.github/workflows/tests.yml`, `.github/workflows/validate.yml`,
 `custom_components/jarvis/manifest.json`, `custom_components/jarvis/const.py`.
 
-- [ ] Creare i file di struttura e l'ambiente locale `.venv` con `uv`.
-- [ ] `tests.yml`: un lavoro per `tests/unit` e uno per `tests/ha`, più `ruff check`.
-- [ ] `validate.yml`: `hassfest` e validazione HACS.
-- [ ] Creare il repository pubblico `iAlias/ha-jarvis` e fare il primo push.
+- [x] Creare i file di struttura e l'ambiente locale `.venv` con `uv`.
+- [x] `tests.yml`: un lavoro per `tests/unit` e uno per `tests/ha`, più `ruff check`.
+- [x] `validate.yml`: `hassfest` e validazione HACS.
+- [x] Creare il repository pubblico `iAlias/ha-jarvis` e fare il primo push.
 
 ## Compito 2: client DeepSeek e testi
 
@@ -93,12 +93,12 @@ test nel compito indicato.
   `default_prompt(language)`, `build_prompt(prompt, words, language)`,
   `error_message(kind, language)`, `clean_invocation_words(words) -> list[str]`.
 
-- [ ] Test contro un finto server locale: elenco modelli; flusso con testo;
+- [x] Test contro un finto server locale: elenco modelli; flusso con testo;
   flusso con strumenti a frammenti; `[DONE]`; righe di commento; i cinque
   errori; flusso interrotto; riga non JSON.
-- [ ] Test dei testi: scelta della lingua; pulizia delle parole; prompt con
+- [x] Test dei testi: scelta della lingua; pulizia delle parole; prompt con
   nomi contenenti `{{`.
-- [ ] Implementare, far passare i test in locale, commit.
+- [x] Implementare, far passare i test in locale, commit.
 
 ## Compito 3: traduttore
 
@@ -111,10 +111,10 @@ test nel compito indicato.
 `build_messages(content) -> list[dict]`,
 `async_transform_stream(chunks) -> AsyncGenerator[delta]`.
 
-- [ ] Test: ogni tipo di messaggio; strumento convertito in JSON Schema; flusso
+- [x] Test: ogni tipo di messaggio; strumento convertito in JSON Schema; flusso
   di solo testo; flusso con strumento valido; argomenti non validi resi come
   richiesta esterna più esito d'errore; flusso vuoto.
-- [ ] Implementare, push, CI verde, commit.
+- [x] Implementare, push, CI verde, commit.
 
 ## Compito 4: configurazione
 
@@ -125,10 +125,10 @@ test nel compito indicato.
 **Produce:** voce di configurazione con `runtime_data: DeepSeekClient`; dati
 `api_key`; opzioni `invocation_words`, `prompt`, `model`, `llm_hass_api`.
 
-- [ ] Test: chiave valida; chiave sbagliata; rete assente; riautenticazione;
+- [x] Test: chiave valida; chiave sbagliata; rete assente; riautenticazione;
   salvataggio opzioni; parole vuote rifiutate; elenco modelli non raggiungibile;
   avvio con i vari errori.
-- [ ] Implementare, push, CI verde, commit.
+- [x] Implementare, push, CI verde, commit.
 
 ## Compito 5: agente
 
@@ -137,23 +137,56 @@ test nel compito indicato.
 
 **Consuma:** tutto ciò che producono i compiti 2, 3 e 4.
 
-- [ ] Test: risposta semplice; uno strumento; due giri; limite dei giri; ogni
+- [x] Test: risposta semplice; uno strumento; due giri; limite dei giri; ogni
   errore con il suo messaggio a voce; chiave revocata che avvia la
   riautenticazione; risposta vuota; riga dei nomi presente nel prompt.
-- [ ] Implementare, push, CI verde, commit.
+- [x] Implementare, push, CI verde, commit.
 
 ## Compito 6: assistente automatico
 
 **File:** `custom_components/jarvis/assistant.py`, `tests/ha/test_assistant.py`.
 
-- [ ] Test: creazione riuscita; motori assenti con notifica; errore con
+- [x] Test: creazione riuscita; motori assenti con notifica; errore con
   notifica; nessun secondo tentativo; attesa dell'avvio di HA.
-- [ ] Implementare, push, CI verde, commit.
+- [x] Implementare, push, CI verde, commit.
 
 ## Compito 7: rifinitura e rilascio
 
-- [ ] README completo in italiano: installazione, impostazioni, uso, costi,
+- [x] README completo in italiano: installazione, impostazioni, uso, costi,
   riservatezza, risoluzione dei problemi.
-- [ ] `hassfest` e validazione HACS verdi.
-- [ ] Rilascio `v0.1.0` su GitHub.
-- [ ] Consegnare all'utente la lista di collaudo della sezione 14 dello spec.
+- [x] `hassfest` e validazione HACS verdi.
+- [x] Rilascio `v0.1.0` su GitHub.
+- [x] Consegnare all'utente la lista di collaudo della sezione 14 dello spec.
+
+---
+
+## Esito
+
+Completato il 2026-10-02. Rilascio `v0.1.0` sul ramo principale. In CI: 62 test
+con Home Assistant e 53 test puri, `ruff`, `hassfest` e validazione HACS, tutti
+verdi.
+
+Resta da fare, a cura dell'utente: il collaudo su un'installazione reale di Home
+Assistant con una API key vera (sezione 14 dello spec).
+
+## Decisioni prese in corso d'opera
+
+1. **Compiti 3-6 scritti in blocco e collaudati insieme**, anziché con un push
+   per compito. Motivo: i test con HA girano solo in CI e i push erano in attesa
+   di conferma. Costo se sbagliato: nessuno, i test coprono ogni compito.
+2. **Requisito di test in più:** `gazetteer-matcher`, richiesto dal componente
+   `conversation` di HA 2026.9.4. Costo se sbagliato: nessuno, riguarda solo i
+   test.
+3. **I test caricano il componente di base `homeassistant`**, senza il quale
+   `conversation` non parte. In un'installazione vera c'è sempre.
+4. **Messaggi con sole richieste di strumenti: testo vuoto anziché `null`.** È
+   la forma che DeepSeek stesso restituisce. Non verificato contro l'API vera:
+   se DeepSeek rifiutasse il testo vuoto, le richieste con strumenti
+   fallirebbero al secondo giro.
+5. **I test dell'assistente automatico usano finte funzioni di pipeline**, non il
+   componente vero. Le firme sono state lette dal sorgente di HA 2026.9.4. Costo
+   se sbagliato: l'assistente non verrebbe creato in automatico, ma l'errore è
+   intercettato e compare la notifica con i passaggi manuali.
+6. **Nessuna revisione indipendente finale.** Scelta di pragmatismo richiesta
+   dall'utente: la verifica si appoggia ai test automatici. Costo se sbagliato:
+   difetti che un secondo paio d'occhi avrebbe visto.
