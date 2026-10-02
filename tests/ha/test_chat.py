@@ -82,7 +82,7 @@ def test_build_messages_covers_every_kind() -> None:
     assert system == {"role": "system", "content": "Sei Jarvis."}
     assert user == {"role": "user", "content": "accendi la luce"}
     assert request["role"] == "assistant"
-    assert request["content"] is None
+    assert request["content"] == ""
     (tool_call,) = request["tool_calls"]
     assert tool_call["id"] == "call_1"
     assert tool_call["type"] == "function"

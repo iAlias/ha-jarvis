@@ -50,7 +50,12 @@ def _convert_content(content: conversation.Content) -> dict[str, Any] | None:
     if isinstance(content, conversation.AssistantContent):
         if not content.content and not content.tool_calls:
             return None
-        message: dict[str, Any] = {"role": "assistant", "content": content.content}
+        # Stringa vuota e non null: è la forma che DeepSeek stesso restituisce
+        # per i messaggi che contengono solo richieste di strumenti.
+        message: dict[str, Any] = {
+            "role": "assistant",
+            "content": content.content or "",
+        }
         if content.tool_calls:
             message["tool_calls"] = [
                 {
