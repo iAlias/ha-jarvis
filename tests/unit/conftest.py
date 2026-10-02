@@ -1,15 +1,15 @@
 """Fixture dei test puri: caricano i moduli senza importare Home Assistant."""
 
-import importlib.util
-import sys
 from collections.abc import AsyncGenerator, Awaitable, Callable
+import importlib.util
 from pathlib import Path
+import sys
 from types import ModuleType
 
 import aiohttp
-import pytest
 from aiohttp import web
 from aiohttp.test_utils import TestServer
+import pytest
 
 COMPONENT_DIR = Path(__file__).parents[2] / "custom_components" / "jarvis"
 

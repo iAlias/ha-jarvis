@@ -4,9 +4,9 @@ Questo modulo non importa Home Assistant: dipende solo da aiohttp, così si
 collauda da solo.
 """
 
-import json
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
+import json
 from typing import Any
 
 import aiohttp

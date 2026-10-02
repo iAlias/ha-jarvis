@@ -3,8 +3,8 @@
 Questo modulo non importa Home Assistant, così si collauda da solo.
 """
 
-import re
 from collections.abc import Iterable
+import re
 
 ITALIAN = "it"
 ENGLISH = "en"
@@ -72,6 +72,24 @@ ERROR_MESSAGES = {
     },
 }
 
+# Titolo e testo della notifica mostrata quando l'assistente vocale non si è
+# potuto creare in automatico.
+ASSISTANT_HELP = {
+    ITALIAN: (
+        "Jarvis: aggiungi l'assistente vocale",
+        "Non ho potuto creare da solo l'assistente vocale «Jarvis». Per farlo a"
+        " mano: apri Impostazioni → Assistenti vocali, premi «Aggiungi"
+        " assistente», dagli un nome e scegli «Jarvis» come agente di"
+        " conversazione.",
+    ),
+    ENGLISH: (
+        "Jarvis: add the voice assistant",
+        'I could not create the "Jarvis" voice assistant on my own. To do it by'
+        ' hand: open Settings → Voice assistants, press "Add assistant", give'
+        ' it a name and pick "Jarvis" as the conversation agent.',
+    ),
+}
+
 _ENDRAW = re.compile(r"\{%-?\s*endraw\s*-?%\}")
 
 
@@ -91,6 +109,11 @@ def error_message(kind: str, language: str | None) -> str:
     """Messaggio da pronunciare per un tipo di errore."""
     messages = ERROR_MESSAGES.get(kind, ERROR_MESSAGES["server"])
     return messages[language_key(language)]
+
+
+def assistant_help(language: str | None) -> tuple[str, str]:
+    """Titolo e testo con i passaggi manuali per aggiungere l'assistente."""
+    return ASSISTANT_HELP[language_key(language)]
 
 
 def clean_invocation_words(words: Iterable[str]) -> list[str]:

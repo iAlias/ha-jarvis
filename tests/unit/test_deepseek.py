@@ -4,8 +4,8 @@ import asyncio
 import json
 
 import aiohttp
-import pytest
 from aiohttp import web
+import pytest
 
 API_KEY = "sk-test"
 PAYLOAD = {"model": "deepseek-flash", "messages": [], "stream": True}

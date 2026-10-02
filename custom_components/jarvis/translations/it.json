@@ -1,0 +1,49 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Incolla la API key di DeepSeek. Puoi crearla su {api_keys_url}.",
+        "data": {
+          "api_key": "API key DeepSeek"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Nuova API key",
+        "description": "La API key di DeepSeek non è più valida. Inseriscine una nuova: puoi crearla su {api_keys_url}.",
+        "data": {
+          "api_key": "API key DeepSeek"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "La API key non è valida.",
+      "cannot_connect": "Impossibile collegarsi a DeepSeek. Controlla la connessione e riprova."
+    },
+    "abort": {
+      "reauth_successful": "API key aggiornata.",
+      "single_instance_allowed": "Jarvis è già configurato."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Impostazioni di Jarvis",
+        "data": {
+          "invocation_words": "Parole d'invocazione",
+          "prompt": "Personalità",
+          "model": "Modello",
+          "llm_hass_api": "Strumenti"
+        },
+        "data_description": {
+          "invocation_words": "I nomi con cui chiami l'assistente, per esempio Jarvis, Alfredo, mbare. Ne serve almeno uno.",
+          "prompt": "Istruzioni sul carattere e sullo stile delle risposte.",
+          "model": "deepseek-flash è veloce ed economico; deepseek-v4-pro è più capace ma più lento.",
+          "llm_hass_api": "Lascia Assist per permettere a Jarvis di leggere e comandare i dispositivi esposti. Se lo togli, Jarvis conversa soltanto."
+        }
+      }
+    },
+    "error": {
+      "no_invocation_words": "Inserisci almeno una parola d'invocazione."
+    }
+  }
+}

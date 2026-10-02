@@ -1,0 +1,49 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Paste your DeepSeek API key. You can create one at {api_keys_url}.",
+        "data": {
+          "api_key": "DeepSeek API key"
+        }
+      },
+      "reauth_confirm": {
+        "title": "New API key",
+        "description": "The DeepSeek API key is no longer valid. Enter a new one: you can create it at {api_keys_url}.",
+        "data": {
+          "api_key": "DeepSeek API key"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The API key is not valid.",
+      "cannot_connect": "Could not reach DeepSeek. Check the connection and try again."
+    },
+    "abort": {
+      "reauth_successful": "API key updated.",
+      "single_instance_allowed": "Jarvis is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Jarvis settings",
+        "data": {
+          "invocation_words": "Invocation words",
+          "prompt": "Personality",
+          "model": "Model",
+          "llm_hass_api": "Tools"
+        },
+        "data_description": {
+          "invocation_words": "The names you call the assistant by, for example Jarvis, Alfredo, mbare. At least one is required.",
+          "prompt": "Instructions on the character and style of the answers.",
+          "model": "deepseek-flash is fast and cheap; deepseek-v4-pro is more capable but slower.",
+          "llm_hass_api": "Keep Assist to let Jarvis read and control the exposed devices. Without it, Jarvis only chats."
+        }
+      }
+    },
+    "error": {
+      "no_invocation_words": "Enter at least one invocation word."
+    }
+  }
+}

@@ -114,3 +114,13 @@ def test_error_messages_are_distinct(texts) -> None:
 
 def test_unknown_error_kind_falls_back_to_service_error(texts) -> None:
     assert texts.error_message("mai visto", "it") == texts.error_message("server", "it")
+
+
+def test_assistant_help_explains_the_manual_steps(texts) -> None:
+    italian_title, italian_message = texts.assistant_help("it")
+    english_title, english_message = texts.assistant_help("en")
+
+    assert "Jarvis" in italian_title and "Jarvis" in english_title
+    assert "Assistenti vocali" in italian_message
+    assert "Voice assistants" in english_message
+    assert texts.assistant_help("de") == texts.assistant_help("en")
