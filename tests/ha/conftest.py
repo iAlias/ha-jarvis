@@ -8,6 +8,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.const import CONF_API_KEY, CONF_LLM_HASS_API, CONF_MODEL, CONF_PROMPT
 from homeassistant.core import HomeAssistant
+from homeassistant.setup import async_setup_component
 
 from custom_components.jarvis.const import (
     CONF_ASSISTANT_CREATED,
@@ -25,6 +26,12 @@ MODELS = [
 @pytest.fixture(autouse=True)
 def auto_enable_custom_integrations(enable_custom_integrations: None) -> None:
     """Permette a HA di caricare l'integrazione dalla cartella custom_components."""
+
+
+@pytest.fixture(autouse=True)
+async def setup_homeassistant(hass: HomeAssistant) -> None:
+    """Il componente di base di HA: in un'installazione vera c'è sempre."""
+    assert await async_setup_component(hass, "homeassistant", {})
 
 
 @pytest.fixture
