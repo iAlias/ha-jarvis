@@ -1,0 +1,12 @@
+# Test che dipendono da Home Assistant: girano solo su Linux (in CI).
+# Questa versione del plugin corrisponde a Home Assistant 2026.9.4.
+pytest-homeassistant-custom-component==0.13.367
+
+# Requisiti dei componenti di HA caricati dai test (conversation, assist_pipeline,
+# tts, ffmpeg): nei test HA non li installa da solo.
+hassil==3.12.1
+home-assistant-intents==2026.8.28
+pymicro-vad==1.0.1
+pyspeex-noise==1.0.2
+mutagen==1.48.1
+ha-ffmpeg==3.2.2

@@ -1,0 +1,24 @@
+name: Validazione
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    # HACS legge il ramo principale: sugli altri rami il controllo non ha senso.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: integration
+          ignore: brands
