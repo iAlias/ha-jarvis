@@ -1,7 +1,7 @@
 # Jarvis, pezzo 1: il nucleo (integrazione Home Assistant)
 
 - **Data:** 2026-10-02
-- **Stato:** design approvato in conversazione, in attesa di revisione dello spec scritto
+- **Stato:** implementato e rilasciato come `v0.1.0`; in attesa del collaudo su un Home Assistant reale
 - **Ambito:** primo di quattro pezzi (vedi "Il progetto completo")
 
 ## 1. Intento
