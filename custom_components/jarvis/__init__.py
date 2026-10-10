@@ -7,6 +7,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .assistant import async_schedule_assistant_creation
+from .card import async_register_card
 from .const import LOGGER
 from .deepseek import (
     DeepSeekAuthError,
@@ -37,6 +38,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: JarvisConfigEntry) -> bo
     entry.runtime_data = client
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    await async_register_card(hass)
     async_schedule_assistant_creation(hass, entry)
 
     return True

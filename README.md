@@ -51,6 +51,30 @@ oppure premi il microfono:
 Jarvis vede e comanda solo i dispositivi che esponi tu in **Impostazioni →
 Assistenti vocali → Esponi**.
 
+## Il pulsante Jarvis
+
+L'integrazione aggiunge alle dashboard la card **Jarvis**: un pulsante che apre
+l'ascolto al tocco, senza dire la parola d'attivazione. Lo premi e parli:
+"aggiornami sulla casa".
+
+Per aggiungerla: modifica la dashboard → **Aggiungi scheda** → cerca **Jarvis**.
+In YAML basta:
+
+```yaml
+type: custom:jarvis-card
+```
+
+Opzioni, tutte facoltative:
+
+| Opzione | A cosa serve |
+|---|---|
+| `name` | Il nome mostrato sotto il pulsante. |
+| `pipeline_id` | L'assistente da aprire. Se manca, la card usa quello collegato a Jarvis. |
+| `color` | Il colore del pulsante, per esempio `#ff7043`. |
+
+Nell'app di Home Assistant il pulsante apre l'ascolto dell'app. Nel browser il
+microfono funziona solo se Home Assistant è raggiunto in HTTPS.
+
 ## Impostazioni
 
 Apri **Impostazioni → Dispositivi e servizi → Jarvis → Configura**.
