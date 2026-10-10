@@ -1,7 +1,7 @@
 {
   "domain": "jarvis",
   "name": "Jarvis",
-  "after_dependencies": ["assist_pipeline", "frontend", "intent"],
+  "after_dependencies": ["assist_pipeline", "frontend", "intent", "lovelace"],
   "codeowners": ["@iAlias"],
   "config_flow": true,
   "dependencies": ["conversation", "http"],
@@ -11,5 +11,5 @@
   "issue_tracker": "https://github.com/iAlias/ha-jarvis/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "0.2.0"
+  "version": "0.2.1"
 }

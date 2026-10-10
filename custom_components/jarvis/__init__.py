@@ -7,7 +7,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .assistant import async_schedule_assistant_creation
-from .card import async_register_card
+from .card import async_register_card, async_unregister_card
 from .const import LOGGER
 from .deepseek import (
     DeepSeekAuthError,
@@ -47,3 +47,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: JarvisConfigEntry) -> bo
 async def async_unload_entry(hass: HomeAssistant, entry: JarvisConfigEntry) -> bool:
     """Ferma Jarvis."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: JarvisConfigEntry) -> None:
+    """Pulisce ciò che Jarvis ha aggiunto fuori dalla propria configurazione."""
+    await async_unregister_card(hass)
