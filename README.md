@@ -1,5 +1,11 @@
 # Jarvis per Home Assistant
 
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024%2B-18bcf2)
+![HACS](https://img.shields.io/badge/HACS-custom%20repository-41bdf5)
+![DeepSeek](https://img.shields.io/badge/LLM-DeepSeek-4d6bfe)
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776ab)
+![Licenza](https://img.shields.io/badge/licenza-MIT-2a6e4e)
+
 Un assistente in stile Jarvis per [Home Assistant](https://www.home-assistant.io/),
 con [DeepSeek](https://platform.deepseek.com/) come cervello. Gli scrivi o gli
 parli da Assist: comanda la casa, ti dice in che stato è e risponde alle domande
