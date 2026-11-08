@@ -11,6 +11,9 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 import voluptuous as vol
 
 from homeassistant.components import conversation
+from homeassistant.components.homeassistant.exposed_entities import (
+    async_expose_entity,
+)
 from homeassistant.config_entries import SOURCE_REAUTH
 from homeassistant.const import CONF_LLM_HASS_API
 from homeassistant.core import Context, HomeAssistant
@@ -417,3 +420,64 @@ async def test_agent_without_tools_only_chats(
     agent_info = conversation.async_get_agent_info(hass, AGENT_ID)
     assert agent_info is not None
     assert agent_info.supports_streaming is True
+
+
+class TurnOnTool(LightTool):
+    """Strumento con gli argomenti di quelli di Assist."""
+
+    name = "HassTurnOn"
+    parameters = vol.Schema({vol.Required("name"): str})
+
+
+@pytest.fixture
+async def init_with_turn_on(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    mock_list_models: AsyncMock,
+) -> AsyncGenerator[TurnOnTool]:
+    """Jarvis con uno strumento HassTurnOn e alcuni dispositivi esposti."""
+    tool = TurnOnTool()
+    unregister = llm.async_register_api(hass, FakeAPI(hass, tool))
+    for entity_id, attributes in (
+        ("lock.porta", {"friendly_name": "Porta"}),
+        ("cover.tapparella", {"friendly_name": "Tapparella"}),
+    ):
+        hass.states.async_set(entity_id, "closed", attributes)
+        async_expose_entity(hass, conversation.DOMAIN, entity_id, True)
+    hass.config_entries.async_update_entry(
+        mock_config_entry,
+        options={**mock_config_entry.options, CONF_LLM_HASS_API: [API_ID]},
+    )
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    yield tool
+    unregister()
+
+
+async def test_locks_are_never_opened_by_voice(
+    hass: HomeAssistant, init_with_turn_on: TurnOnTool, fake_deepseek: FakeDeepSeek
+) -> None:
+    fake_deepseek.responses = [_tool_call('{"name": "Porta"}', name="HassTurnOn")]
+    fake_deepseek.responses.append(_text("Non posso, signore."))
+
+    await _converse(hass, "apri la porta")
+
+    assert init_with_turn_on.calls == []
+    outcome = fake_deepseek.payloads[1]["messages"][-1]
+    assert json.loads(outcome["content"])["error"] == "not_allowed_by_voice"
+
+
+async def test_covers_move_after_yes(
+    hass: HomeAssistant, init_with_turn_on: TurnOnTool, fake_deepseek: FakeDeepSeek
+) -> None:
+    call = _tool_call('{"name": "Tapparella"}', name="HassTurnOn")
+    fake_deepseek.responses = [call, _text("Apro la tapparella?"), call]
+    fake_deepseek.responses.append(_text("Fatto."))
+
+    first = await _converse(hass, "apri la tapparella")
+    assert init_with_turn_on.calls == []
+    outcome = fake_deepseek.payloads[1]["messages"][-1]
+    assert json.loads(outcome["content"])["error"] == "confirmation_required"
+
+    await _converse(hass, "sì", conversation_id=first.conversation_id)
+    assert init_with_turn_on.calls == [{"name": "Tapparella"}]

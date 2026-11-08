@@ -15,6 +15,10 @@ from .deepseek import ToolCallAccumulator
 # Chiavi di primo livello dello schema che l'API non accetta.
 _UNSUPPORTED_SCHEMA_KEYS = {"oneOf", "anyOf", "allOf"}
 
+# Riceve nome e argomenti di uno strumento; None se può partire, altrimenti
+# l'esito da restituire al modello al posto dell'esecuzione.
+type ToolGuard = Callable[[str, dict[str, Any]], dict[str, Any] | None]
+
 type Delta = (
     conversation.AssistantContentDeltaDict | conversation.ToolResultContentDeltaDict
 )
@@ -97,6 +101,7 @@ def _parse_arguments(arguments: str) -> dict[str, Any] | None:
 
 async def async_transform_stream(
     chunks: AsyncIterable[dict[str, Any]],
+    guard: ToolGuard | None = None,
 ) -> AsyncGenerator[Delta]:
     """Converte i frammenti di DeepSeek nei delta attesi dalla cronologia di HA.
 
@@ -124,26 +129,30 @@ async def async_transform_stream(
     failures: list[conversation.ToolResultContentDeltaDict] = []
     for call in accumulator.result():
         arguments = _parse_arguments(call.arguments)
-        # Con argomenti non validi lo strumento non va eseguito: lo si segna
-        # come esterno e si restituisce al modello un esito d'errore.
+        if arguments is None:
+            refusal: dict[str, Any] | None = {
+                "error": "invalid_arguments",
+                "error_text": "Tool arguments are not valid JSON",
+            }
+        else:
+            refusal = guard(call.name, arguments) if guard else None
+        # Uno strumento rifiutato non va eseguito: lo si segna come esterno e
+        # si restituisce al modello l'esito del rifiuto.
         tool_input = llm.ToolInput(
             tool_name=call.name,
             tool_args=arguments or {},
-            external=arguments is None,
+            external=refusal is not None,
         )
         if call.id:
             tool_input.id = call.id
         tool_inputs.append(tool_input)
-        if arguments is None:
+        if refusal is not None:
             failures.append(
                 {
                     "role": "tool_result",
                     "tool_call_id": tool_input.id,
                     "tool_name": call.name,
-                    "tool_result": {
-                        "error": "invalid_arguments",
-                        "error_text": "Tool arguments are not valid JSON",
-                    },
+                    "tool_result": refusal,
                 }
             )
 

@@ -11,7 +11,7 @@ con [DeepSeek](https://platform.deepseek.com/) come cervello. Gli scrivi o gli
 parli da Assist: comanda la casa, ti dice in che stato è e risponde alle domande
 con il tono di un maggiordomo inglese.
 
-Stato: versione 0.1.0, primo dei quattro pezzi previsti (vedi
+Stato: versione 0.3.0, primo dei quattro pezzi previsti (vedi
 [Cosa arriverà](#cosa-arriverà)).
 
 ## Cosa fa
@@ -20,6 +20,8 @@ Stato: versione 0.1.0, primo dei quattro pezzi previsti (vedi
   ad Assist.
 - **Dice lo stato della casa:** temperature, porte, consumi, presenze.
 - **Conversa:** domande generali, spiegazioni, calcoli.
+- **Non fa danni:** tapparelle e valvole si muovono solo dopo un tuo "sì";
+  serrature, allarme, cancelli e garage non si comandano mai a voce.
 - **Risponde a più nomi:** scegli tu le parole d'invocazione, per esempio
   "Jarvis", "Alfredo", "mbare".
 
@@ -56,6 +58,17 @@ oppure premi il microfono:
 
 Jarvis vede e comanda solo i dispositivi che esponi tu in **Impostazioni →
 Assistenti vocali → Esponi**.
+
+## Sicurezza dei comandi
+
+| Dispositivi | Cosa fa Jarvis |
+|---|---|
+| Serrature, allarme, cancelli, garage, porte motorizzate | Non li comanda mai a voce: ti rimanda all'app. Può dirti in che stato sono. |
+| Tapparelle, tende, valvole | Ti chiede conferma ("Apro la tapparella del salotto?") e le muove solo se rispondi "sì". |
+| Tutto il resto | Esegue subito. |
+
+Gli script esposti ad Assist non passano da questo controllo: se uno apre il
+cancello, non esporlo.
 
 ## Il pulsante Jarvis
 

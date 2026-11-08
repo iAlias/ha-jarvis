@@ -73,3 +73,9 @@ async def start_server() -> AsyncGenerator[StartServer]:
 
     for server in servers:
         await server.close()
+
+
+@pytest.fixture(scope="session")
+def safety() -> ModuleType:
+    """Il modulo delle regole di sicurezza."""
+    return _load("safety")
