@@ -14,13 +14,14 @@ from .const import (
     CONF_INVOCATION_WORDS,
     DEFAULT_MODEL,
     DOMAIN,
+    LOCAL_INTENTS,
     LOGGER,
     MAX_TOKENS,
     MAX_TOOL_ITERATIONS,
 )
 from .deepseek import DeepSeekAuthError, DeepSeekError, DeepSeekServerError
 from .safety import TARGET_ARGS, Guard, is_read_only
-from .texts import build_prompt, default_prompt, error_message
+from .texts import HOME_DATA_LINE, build_prompt, default_prompt, error_message
 
 
 class TooManyStepsError(DeepSeekError):
@@ -80,6 +81,8 @@ class JarvisConversationEntity(conversation.ConversationEntity):
             options.get(CONF_INVOCATION_WORDS, []),
             user_input.language,
         )
+        if options.get(CONF_LLM_HASS_API):
+            prompt = f"{prompt}\n{HOME_DATA_LINE}"
 
         try:
             await chat_log.async_provide_llm_data(
@@ -90,6 +93,23 @@ class JarvisConversationEntity(conversation.ConversationEntity):
             )
         except conversation.ConverseError as err:
             return err.as_conversation_result()
+
+        if response := await conversation.async_handle_intents(
+            self.hass,
+            user_input,
+            chat_log,
+            intent_filter=lambda result: result.intent.name not in LOCAL_INTENTS,
+        ):
+            # Risposta locale: va in cronologia, così DeepSeek la vede dopo.
+            chat_log.async_add_assistant_content_without_tools(
+                conversation.AssistantContent(
+                    agent_id=user_input.agent_id,
+                    content=response.speech.get("plain", {}).get("speech"),
+                )
+            )
+            return conversation.ConversationResult(
+                response=response, conversation_id=chat_log.conversation_id
+            )
 
         try:
             await self._async_run_tool_loop(

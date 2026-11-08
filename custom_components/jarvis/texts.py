@@ -40,6 +40,17 @@ Reply in the language you are spoken to in.
 """,  # noqa: E501
 }
 
+# Aggiunta al prompt quando Jarvis vede la casa: senza, il modello cerca il
+# sensore con un filtro sbagliato, non trova nulla e dice che non esiste.
+HOME_DATA_LINE = (
+    "To read a value (temperature, humidity, power, doors), call"
+    " homeassistant__GetLiveContext. If a filter by name or area finds nothing,"
+    " call it again with only the domain (for example 'sensor') and pick the"
+    " right entity yourself from its name and area: places like 'balcony' are"
+    " often part of the sensor name. Never say a device does not exist before"
+    " trying that."
+)
+
 NAMES_LINES = {
     ITALIAN: (
         "Rispondi a questi nomi: {names}. Se un messaggio inizia con uno di questi"

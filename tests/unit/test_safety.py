@@ -59,5 +59,5 @@ def test_answers(safety: ModuleType) -> None:
     assert not safety.is_yes("non si muove")
     assert not safety.is_yes("chiudi tutto")
     assert safety.is_read_only("HassGetState")
-    assert safety.is_read_only("GetLiveContext")
+    assert safety.is_read_only("homeassistant__GetLiveContext")
     assert not safety.is_read_only("HassTurnOn")

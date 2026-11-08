@@ -11,7 +11,7 @@ con [DeepSeek](https://platform.deepseek.com/) come cervello. Gli scrivi o gli
 parli da Assist: comanda la casa, ti dice in che stato è e risponde alle domande
 con il tono di un maggiordomo inglese.
 
-Stato: versione 0.3.0, primo dei quattro pezzi previsti (vedi
+Stato: versione 0.4.0, primo dei quattro pezzi previsti (vedi
 [Cosa arriverà](#cosa-arriverà)).
 
 ## Cosa fa
@@ -20,6 +20,8 @@ Stato: versione 0.3.0, primo dei quattro pezzi previsti (vedi
   ad Assist.
 - **Dice lo stato della casa:** temperature, porte, consumi, presenze.
 - **Conversa:** domande generali, spiegazioni, calcoli.
+- **Risponde da solo, senza DeepSeek:** ora, data, meteo e timer. È più
+  rapido, non costa nulla e funziona anche senza internet.
 - **Non fa danni:** tapparelle e valvole si muovono solo dopo un tuo "sì";
   serrature, allarme, cancelli e garage non si comandano mai a voce.
 - **Risponde a più nomi:** scegli tu le parole d'invocazione, per esempio

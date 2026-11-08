@@ -18,6 +18,7 @@ from homeassistant.config_entries import SOURCE_REAUTH
 from homeassistant.const import CONF_LLM_HASS_API
 from homeassistant.core import Context, HomeAssistant
 from homeassistant.helpers import intent, llm
+from homeassistant.setup import async_setup_component
 
 from custom_components.jarvis.const import MAX_TOOL_ITERATIONS
 from custom_components.jarvis.deepseek import (
@@ -27,7 +28,7 @@ from custom_components.jarvis.deepseek import (
     DeepSeekRateLimitError,
     DeepSeekServerError,
 )
-from custom_components.jarvis.texts import error_message
+from custom_components.jarvis.texts import HOME_DATA_LINE, error_message
 
 AGENT_ID = "conversation.jarvis"
 API_ID = "prova"
@@ -481,3 +482,36 @@ async def test_covers_move_after_yes(
 
     await _converse(hass, "sì", conversation_id=first.conversation_id)
     assert init_with_turn_on.calls == [{"name": "Tapparella"}]
+
+
+async def test_time_is_answered_locally(
+    hass: HomeAssistant, init_integration: MockConfigEntry, fake_deepseek: FakeDeepSeek
+) -> None:
+    assert await async_setup_component(hass, "intent", {})
+
+    result = await _converse(hass, "what time is it", language="en")
+
+    assert result.response.response_type is not intent.IntentResponseType.ERROR
+    assert _speech(result)
+    assert fake_deepseek.payloads == []
+
+
+async def test_other_requests_still_go_to_deepseek(
+    hass: HomeAssistant, init_integration: MockConfigEntry, fake_deepseek: FakeDeepSeek
+) -> None:
+    assert await async_setup_component(hass, "intent", {})
+    fake_deepseek.responses = [_text("Ciao.")]
+
+    await _converse(hass, "tell me a joke", language="en")
+
+    assert len(fake_deepseek.payloads) == 1
+
+
+async def test_prompt_explains_how_to_find_sensors(
+    hass: HomeAssistant, init_with_tools: MockConfigEntry, fake_deepseek: FakeDeepSeek
+) -> None:
+    fake_deepseek.responses = [_text("Ventidue gradi, signore.")]
+
+    await _converse(hass, "che temperatura c'è in balcone")
+
+    assert HOME_DATA_LINE in fake_deepseek.payloads[0]["messages"][0]["content"]

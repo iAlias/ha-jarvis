@@ -27,7 +27,8 @@ _NO = re.compile(
 
 def is_read_only(tool_name: str) -> bool:
     """Gli strumenti che leggono soltanto non vanno controllati."""
-    return tool_name.startswith(("Get", "HassGet"))
+    # Gli strumenti di Assist possono avere un prefisso: homeassistant__GetLiveContext.
+    return tool_name.rpartition("__")[2].startswith(("Get", "HassGet"))
 
 
 def is_yes(text: str) -> bool:

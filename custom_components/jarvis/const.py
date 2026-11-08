@@ -15,6 +15,22 @@ DEFAULT_MODEL = "deepseek-flash"
 FALLBACK_MODELS = ["deepseek-flash", "deepseek-v4-pro"]
 DEFAULT_INVOCATION_WORDS = ["Jarvis"]
 
+# Domande a cui risponde Home Assistant da solo, senza DeepSeek: sono più
+# rapide, gratis e funzionano anche senza internet.
+LOCAL_INTENTS = {
+    "HassGetCurrentTime",
+    "HassGetCurrentDate",
+    "HassGetWeather",
+    "HassStartTimer",
+    "HassCancelTimer",
+    "HassCancelAllTimers",
+    "HassIncreaseTimer",
+    "HassDecreaseTimer",
+    "HassPauseTimer",
+    "HassUnpauseTimer",
+    "HassTimerStatus",
+}
+
 # Tetto di sicurezza su costo e durata: le risposte vocali sono brevi.
 MAX_TOKENS = 1024
 MAX_TOOL_ITERATIONS = 10
